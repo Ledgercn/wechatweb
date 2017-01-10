@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wechat service</title>
+    <link rel="icon" type="image/GIF" href="../Images/logo.jpg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 微信服务">
+    <meta name="keywords" content="账中 钱包 微信 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/bootstrap.min.css"/>-->
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/font-awesome.min.css"/>-->
+    <!--<link rel="stylesheet" href="../css/docs.min.css"/>-->
+
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/stellar-sdk/0.6.2/stellar-sdk.min.js"></script>
+    <!--<script src="../js/stellar-sdk.min.js"></script>-->
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/enc-base64-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/cipher-core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/mode-ecb-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/mode-cfb-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/x64-core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/evpkdf-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/pad-nopadding-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/tripledes-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/aes-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/sha512-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/md5-min.js"></script>
+    <script src="../js/commom.js"></script>
+    <!--<script src="../js/enckey.js"></script>-->
+    <script src="../js/transcrypto.js"></script>
+    <script src="../js/threadcheck.js"></script>
+    <script src="../js/getUrlParam.js"></script>
+    <script src="../js/walletindex.js"></script>
+</head>
+<body onunload = 'saveKeyDatas()'>
+    <script>
+        from = getUrlParam('from');
+        if(from == 'singlemessage' || from == 'groupmessage') {
+            parent.location = '../index.html';
+        }
+    </script>
+    <div class="nav navbar text-center">
+        <div class="row"><h2><i id="id_unique_text"></i><i type="button" id="id_qrcode_btn" class="btn fa fa-qrcode" onclick="WalletIndex.qrcodeClick()"></i></h2></div>
+    </div>
+    <div id="id_qrcode_div" class="panel text-center" style="display: none;"><div id="qrcode"></div></div>
+    <div class="panel" id="id_userinfo_list_div">
+        <div class="list-group" style="border-bottom-width: 2px; border-bottom-style: solid;">
+            <a class="list-group-item" style="min-height: 80px;border-width: 2px;" onclick="WalletIndex.userInfoClick()">
+                <h4 class="list-group-item-heading"><i class="fa fa-user-circle-o"></i> <i id="id_userinfor_head"></i></h4>
+                <p class="list-group-item-text"><i class="fa fa-caret-right"></i> <i id="id_userinfor_memo"></i></p>
+            </a>
+            <a class="list-group-item" style="min-height: 80px;border-width: 2px;" onclick="WalletIndex.paymentClick()">
+                <h4 class="list-group-item-heading"><i class="fa fa-credit-card"></i> <i id="id_payment_head"></i></h4>
+                <p class="list-group-item-text"><i class="fa fa-caret-right"></i> <i id="id_payment_memo"></i></p>
+            </a>
+            <a href="#" class="list-group-item" style="min-height: 80px;border-width: 2px; display: none;">
+                <h4 class="list-group-item-heading"><i class="fa fa-history"></i> <i id="id_history_head"></i></h4>
+                <p class="list-group-item-text"><i class="fa fa-caret-right"></i> <i id="id_history_memo"></i></p>
+            </a>
+            <a href="#" class="list-group-item" style="min-height: 80px;border-width: 2px; display: none;">
+                <h4 class="list-group-item-heading"><i class="fa fa-search"></i> <i id="id_search_head"></i></h4>
+                <p class="list-group-item-text"><i class="fa fa-caret-right"></i> <i id="id_search_memo"></i></p>
+            </a>
+            <a class="list-group-item" style="min-height: 80px;border-width: 2px;" onclick="WalletIndex.helpClick()">
+                <h4 class="list-group-item-heading"><i class="fa fa-question"></i> <i id="id_help_head"></i></h4>
+                <p class="list-group-item-text"><i class="fa fa-caret-right"></i> <i id="id_help_memo"></i></p>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        checkDatas();
+//        WalletIndex.initController();
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment - Wechat service</title>
+    <link rel="icon" type="image/GIF" href="../Images/logo.jpg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 微信服务">
+    <meta name="keywords" content="账中 钱包 微信 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/bootstrap.min.css"/>-->
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/font-awesome.min.css"/>-->
+    <!--<link rel="stylesheet" href="../css/docs.min.css"/>-->
+
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/stellar-sdk/0.6.2/stellar-sdk.min.js"></script>
+    <!--<script src="../js/stellar-sdk.min.js"></script>-->
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/enc-base64-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/cipher-core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/evpkdf-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/x64-core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/mode-ecb-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/mode-cfb-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/pad-nopadding-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/tripledes-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/aes-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/sha512-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/md5-min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="../js/commom.js"></script>
+    <!--<script src="../js/enckey.js"></script>-->
+    <script src="../js/transcrypto.js"></script>
+    <script src="../js/threadcheck.js"></script>
+    <script src="../js/Stellar/decode_account.js"></script>
+    <script src="../js/getUrlParam.js"></script>
+    <script src="../js/wxqrcode.js"></script>
+    <script src="../js/accountpayment.js"></script>
+</head>
+<body onunload="saveKeyDatas()">
+    <script>
+        from = getUrlParam('from');
+        if(from == 'singlemessage' || from == 'groupmessage') {
+            parent.location = '../index.html';
+        }
+        WxQrcode.QueryServer();
+    </script>
+    <div class="panel">
+        <!-- error msg -->
+        <div class="bs-callout bs-callout-danger text-center" id="id_error_div" style="display: none;">
+            <p id="id_error_msg" style="color: red;"></p>
+        </div>
+        <!-- error msg end -->
+        <!-- Main panel -->
+        <div class="panel panel-primary">
+            <!-- Panel header -->
+            <div class="panel-heading text-center" id="id_pay_heading_div">
+                <h4><i id="id_pay_header_cap"></i> <i class="btn fa fa-refresh" id="id_pay_header_refresh_btn" onclick="AccountPayment.refreshBtnClick();"></i></h4>
+            </div> <!-- Panel header end-->
+            <!-- Panel body -->
+            <div class="panel-body" id="id_pay_body_div">
+                <dl class="dl-horizontal">
+                    <!-- 对方地址 -->
+                    <dt>
+                        <i class="fa fa-address-card"></i>&nbsp;&nbsp;
+                        <label id="id_pay_toaddress_cap" style="margin-top: 7px;"></label>
+                    </dt>
+                    <dd>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-warning" type="button" onclick="AccountPayment.scanQRcode();"><i class="fa fa-camera"></i></button>
+                            </span>
+                            <input id="id_pay_toaddress_input" type="text" class="form-control"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_pay_toaddress_input')"><i class="fa fa-close"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left">
+                        <i class="fa fa-angle-double-right" style="color: red;"></i> &nbsp;
+                        <i id="id_pay_toaddress_memo" style="color: #999902;"></i>
+                    </dd>
+                    <!-- 对方地址 end -->
+                    <!-- 发送资产 -->
+                    <dt>
+                        <i class="fa fa-gift"></i>&nbsp;&nbsp;
+                        <label id="id_pay_asset_cap" style="margin-top: 7px;"></label>
+                    </dt>
+                    <dd>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-warning" type="button" onclick="AccountPayment.showAssetList()"><i id="id_pay_asset_btn_icon" class="fa fa-chevron-circle-right"></i></button>
+                            </span>
+                            <input id="id_pay_asset_input" type="text" class="form-control" readonly onchange="AccountPayment.setAmountContext()"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_pay_asset_input');AccountPayment.setAmountContext();"><i class="fa fa-close"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left" id="id_pay_asset_select_dd" style="display: none;">
+                    </dd>
+                    <dd class="text-left">
+                        <i class="fa fa-angle-double-right" style="color: red;"></i> &nbsp;
+                        <i id="id_pay_asset_memo" style="color: #999902;"></i>
+                    </dd>
+                    <!-- 发送资产 end -->
+                    <!-- 发送数量 -->
+                    <dt>
+                        <i class="fa fa-calculator"></i>&nbsp;&nbsp;
+                        <label id="id_pay_amount_cap" style="margin-top: 7px;"></label>
+                    </dt>
+                    <dd>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-warning" type="button"  onclick="AccountPayment.refreshBtnClick();"><i class="fa fa-refresh" id="id_pay_amount_refresh_btn"></i></button>
+                            </span>
+                            <input id="id_pay_amount_input" type="text" class="form-control" onkeyup="CheckInputIntFloat(this);"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_pay_amount_input')"><i class="fa fa-close"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left">
+                        <i class="fa fa-angle-double-right" style="color: red;"></i> &nbsp;
+                        <i id="id_pay_amount_memo" style="color: #999902;"></i>
+                    </dd>
+                    <!-- 发送数量 end -->
+                    <!-- 发送备注 -->
+                    <dt>
+                        <i class="fa fa-bookmark-o"></i>&nbsp;&nbsp;
+                        <label id="id_pay_memo_cap" style="margin-top: 7px;"></label>
+                    </dt>
+                    <dd>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown"><i id="id_pay_memo_select_text">ID</i> <span class="caret"/></button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a onclick="$('#id_pay_memo_select_text')[0].innerText = 'ID'">ID</a></li>
+                                    <li><a onclick="$('#id_pay_memo_select_text')[0].innerText = 'TEXT'">TEXT</a></li>
+                                    <li><a onclick="$('#id_pay_memo_select_text')[0].innerText = 'HASH'">HASH</a></li>
+                                    <li><a onclick="$('#id_pay_memo_select_text')[0].innerText = 'RETURN'">RETURN</a></li>
+                                </ul>
+                            </div>
+                            <input id="id_pay_memo_input" type="text" class="form-control"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_pay_memo_input')"><i class="fa fa-close"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left">
+                        <i class="fa fa-angle-double-right" style="color: red;"></i> &nbsp;
+                        <i id="id_pay_memo_memo" style="color: #999902;"></i>
+                    </dd>
+                    <!-- 发送备注 end -->
+
+                </dl>
+            </div> <!-- Panel body end-->
+            <!-- Panel footer -->
+            <div class="panel-footer text-center">
+                <button class="btn btn-primary btn-lg" onclick="AccountPayment.Confirm()">
+                    <i class="fa fa-send-o" id="id_confirmbtnIcon"></i>
+                    <i id="id_confirmbtn"></i>
+                </button>
+            </div> <!-- Panel footer end -->
+        </div> <!-- Main panel end -->
+
+        <!-- execute memo -->
+        <div class="alert alert-info alert-dismissible fade in" role="alert" id="id_execute_msg_div" style="display: none;">
+            <button type="button" class="close" data-dismiss="alert" onclick="$('id_execute_msg_div')[0].setAttribute('style','display: none;')"><span class="fa fa-times-circle"></span></button>
+            <pre id="id_execute_msg_context"></pre>
+        </div> <!-- execute memo end-->
+    </div>
+
+<script>
+    readKeyDatas();
+    AccountPayment.initController();
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wechat service - help</title>
+    <link rel="icon" type="image/GIF" href="../Images/logo.jpg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 微信服务">
+    <meta name="keywords" content="账中 钱包 微信 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/bootstrap.min.css"/>-->
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/font-awesome.min.css"/>-->
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="../js/commom.js"></script>
+    <script src="../js/getUrlParam.js"></script>
+    <script src="../js/threadcheck.js"></script>
+    <script src="../js/help.js"></script>
+</head>
+<body onunload = 'saveCommom()'>
+    <script>
+        var ptPage = getUrlParam('pt');
+        var setLanguage = getUrlParam('l');
+        if(ptPage !=  'true') {
+            ptPage = 'false';
+        }
+    </script>
+    <div class="panel panel-primary">
+        <div class="panel panel-heading text-center">
+            <h3 id="id_help_heading_cap"></h3>
+        </div>
+        <div class="panel panel-body">
+            <div class="panel panel-success">
+                <div class="panel panel-heading">
+                    <h4 id="id_help_wx_cmd_cap"></h4>
+                </div>
+                <div class="panel panel-body">
+                    <h4 id="id_help_cmd_reg_cap"></h4>
+                    <p id="id_help_cmd_reg_memo"></p>
+                    <h4 id="id_help_cmd_help_cap"></h4>
+                    <p id="id_help_cmd_help_memo"></p>
+                    <h4 id="id_help_cmd_wallet_cap"></h4>
+                    <p id="id_help_cmd_wallet_memo"></p>
+                    <h4 id="id_help_cmd_language_cap"></h4>
+                    <p id="id_help_cmd_language_memo"></p>
+                    <h4 id="id_help_cmd_blockchain_cap"></h4>
+                    <p id="id_help_cmd_blockchain_memo"></p>
+                    <h4 id="id_help_cmd_history_cap"></h4>
+                    <p id="id_help_cmd_history_memo"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        readCommom();
+        HelpIndex.initController();
+    </script>
+</body>
+</html>

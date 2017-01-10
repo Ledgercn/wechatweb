@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BlockChain - wechat service</title>
+    <link rel="icon" type="image/GIF" href="../Images/logo.jpg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 微信服务">
+    <meta name="keywords" content="账中 钱包 微信 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/bootstrap.min.css"/>-->
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/font-awesome.min.css"/>-->
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/stellar-sdk/0.6.2/stellar-sdk.min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/enc-base64-min.js"></script>
+
+    <script src="../js/commom.js"></script>
+    <script src="../js/getUrlParam.js"></script>
+    <script src="../js/arraylist.js"></script>
+    <script src="../js/Stellar/decode_ledger.js"></script>
+    <script src="../js/Stellar/decode_transaction_lite.js"></script>
+    <script src="../js/blockchainindex.js"></script>
+</head>
+<body>
+    <div class="panel">
+        <!-- 输入hash或地址 -->
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5>
+                    <i class="btn" onclick="ShoworHideBody('id_blockchain_input_addr_head_icon','id_blockchain_input_addr_body_div')">
+                        <i class="fa fa-caret-down" id="id_blockchain_input_addr_head_icon">&nbsp;&nbsp;</i>
+                        <i id="id_blockchain_input_addr_head_cap"></i>
+                    </i>
+                </h5>
+            </div>
+            <div class="panel-body" id="id_blockchain_input_addr_body_div">
+                <dl class="dl-horizontal">
+                    <!-- 输入hash或地址栏 -->
+                    <dt>
+                        <i class="fa fa-address-card"></i>&nbsp;&nbsp;
+                        <label id="id_blockchain_input_addr_cap" style="margin-top: 7px;"></label>
+                    </dt>
+                    <dd>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-warning" type="button" onclick="BlockChainIndex.queryClick()"><i class="fa fa-search"></i></button>
+                            </span>
+                            <input id="id_blockchain_input_addr_text" type="text" class="form-control"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_blockchain_input_addr_text')"><i class="fa fa-close"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left">
+                        <i class="fa fa-angle-double-right" style="color: red;"></i> &nbsp;
+                        <i id="id_blockchain_input_addr_memo" style="color: #999902;"></i>
+                    </dd>
+                    <!-- 输入hash或地址栏 end -->
+                </dl>
+            </div>
+        </div> <!-- 输入hash或地址 end-->
+
+        <!-- Ledger -->
+        <div class="panel-primary">
+            <div class="panel panel-heading">
+                <h5>
+                    <i class="btn" onclick="ShoworHideBody('id_blockchain_ledger_head_icon','id_blockchain_ledger_body_div')">
+                        <i class="fa fa-caret-down" id="id_blockchain_ledger_head_icon">&nbsp;&nbsp;</i>
+                        <i id="id_blockchain_ledger_head_cap"></i>
+                    </i>
+                    <!--<div class="dropdown">-->
+                        <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">-->
+                            <!--Dropdown-->
+                            <!--<span class="caret"></span>-->
+                        <!--</button>-->
+                        <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">-->
+                            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>-->
+                            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>-->
+                            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>-->
+                            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                    <i class="btn pull-right" onclick="BlockChainIndex.getLedgerClick();"><i id="id_bc_ledger_head_btn"></i> <i class="fa fa-refresh fa-2x" id="id_blockchain_ledger_head_refresh"></i></i>
+                </h5>
+            </div>
+            <div class="panel-body" id="id_blockchain_ledger_body_div">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Sequence</th>
+                            <th>Time</th>
+                            <th>Transactions</th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="id_blockchain_ledger_table_tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div> <!-- Ledger end-->
+
+        <!-- Transaction -->
+        <div class="panel-info">
+            <div class="panel panel-heading">
+                <h5>
+                    <i class="btn" onclick="ShoworHideBody('id_blockchain_trans_head_icon','id_blockchain_trans_body_div')">
+                        <i class="fa fa-caret-down" id="id_blockchain_trans_head_icon">&nbsp;&nbsp;</i>
+                        <i id="id_blockchain_trans_head_cap"></i>
+                    </i>
+                    <i class="btn pull-right" onclick="BlockChainIndex.getTransClick();"><i id="id_bc_trans_head_btn"></i> <i class="fa fa-refresh fa-2x" id="id_blockchain_trans_head_refresh"></i></i>
+                </h5>
+            </div>
+            <div class="panel-body" id="id_blockchain_trans_body_div">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>HashID</th>
+                        <th>SourceID</th>
+                    </tr>
+                    </thead>
+                    <tbody id="id_blockchain_trans_table_tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div> <!-- Transaction end-->
+    </div>
+
+    <script>
+        BlockChainIndex.initController();
+    </script>
+</body>
+</html>

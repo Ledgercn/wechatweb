@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration - wechat service</title>
+    <link rel="icon" type="image/GIF" href="Images/logo.jpg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 微信服务">
+    <meta name="keywords" content="账中 钱包 微信 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="css/bootstrap.min.css"/>-->
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="css/font-awesome.min.css"/>-->
+    <link rel="stylesheet" href="css/docs.min.css"/>
+
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdn.bootcss.com/stellar-sdk/0.6.2/stellar-sdk.min.js"></script>
+    <!--<script src="js/stellar-sdk.min.js"></script>-->
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/enc-base64-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/cipher-core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/evpkdf-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/x64-core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/mode-ecb-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/mode-cfb-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/pad-nopadding-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/tripledes-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/aes-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/sha512-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/md5-min.js"></script>
+    <script src="js/commom.js"></script>
+    <script src="js/enckey.js"></script>
+    <script src="js/transcrypto.js"></script>
+    <script src="js/threadcheck.js"></script>
+    <script src="js/getUrlParam.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <script>
+        from = getUrlParam('from');
+        if(from == 'singlemessage' || from == 'groupmessage') {
+            parent.location = 'index.html';
+        }
+//        checkValid();
+    </script>
+    <h1></h1>
+    <div class="container-fluid text-center">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><h4 id="id_header"></h4></div>
+            <div class="panel-body">
+                <div class="bs-callout bs-callout-danger" id="id_error_div" style="display: none;">
+                    <p id="id_error_msg" style="color: red;">error</p>
+                </div>
+                <dl class="dl-horizontal">
+                    <!-- id输入区 -->
+                    <dt>
+                        <i class="fa fa-drivers-license-o"></i>
+                        <label id="id_identification_cap" style="margin-top: 7px;"></label>
+                    </dt>
+                    <dd>
+                        <div class="input-group">
+                            <input id="id_identification_input" type="text" class="form-control"
+                                   onkeyup="inputIdCheck('id_identification_input')" onafterpast="inputIdCheck('id_identification_input')">
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_identification_input')"><i class="fa fa-close"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left"><i class="fa fa-star" style="color: red;"></i> <i id="id_identification_memo" style="color: #999902;"></i></dd>
+                    <!-- id输入区 end -->
+                    <p> </p>
+
+                    <!-- 密码输入区 -->
+                    <dt>
+                        <i class="fa fa-key"></i>
+                        <label id="id_passowrd_cap" style="margin-top: 7px;"></label>
+                    </dt>
+                    <dd>
+                        <div class="input-group">
+                            <input id="id_password_input1" type="password" class="form-control">
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_password_input1')"><i class="fa fa-close"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left"><i class="fa fa-star" style="color: red;"></i> <i id="id_password_memo1" style="color: #999902;"></i></dd>
+                    <dd>
+                        <div class="input-group">
+                            <input id="id_password_input2" type="password" class="form-control">
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_password_input2')"><i class="fa fa-close"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left"><i class="fa fa-star" style="color: red;"></i> <i id="id_password_memo2" style="color: #999902;"></i></dd>
+                    <!-- 密码输入区 end -->
+                    <p> </p>
+
+                    <!-- 地址选择区 -->
+                    <dt>
+                        <i class="fa fa-vcard"></i>
+                        <label id="id_address_cap" style="margin-top: 7px;"></label>
+                    </dt>
+                    <dd>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-info" type="button" onclick="MainController.showSeedAddr('id_address_input','id_eye_show')"><i id="id_eye_show" class="fa fa-eye"></i></button>
+                            </span>
+                            <input id="id_address_input" type="password" class="form-control" onchange="MainController.changeSkey(value)" onafterpast="MainController.changeSkey(value)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-warning" type="button" onclick="MainController.getAccount('id_address_input','id_address_public')"><i class="fa fa-vcard-o"></i></button>
+                            </span>
+                        </div>
+                    </dd>
+                    <dd class="text-left"><pre id="id_address_public" style="font-size: 20px;"></pre></dd>
+                    <dd class="text-left"><i id="id_address_memo" style="color: #999902;"></i></dd>
+                    <!-- 地址选择区 end -->
+                </dl>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-primary btn-lg" onclick="MainController.Confirm()">
+                    <i class="fa fa-check" id="id_confirmbtnIcon"></i>
+                    <i id="id_confirmbtn"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        checkValid();
+//        MainController.initController();
+    </script>
+</body>
+</html>

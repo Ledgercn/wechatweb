@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - wechat service</title>
+	<link rel="icon" type="image/GIF" href="Images/logo.jpg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 微信服务">
+    <meta name="keywords" content="账中 钱包 微信 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="js/getUrlParam.js"></script>
+</head>
+<body>
+    <div class="container text-center">
+        <h3><span/></h3>
+        <h1 style="color: red"><i class="fa fa-frown-o"><span/></i> Error!</h1>
+        <!--<p><i class="fa fa-info-circle"><span/></i> <i id="detail_error"></i></p>-->
+        <p id="detail_error"></p>
+    </div>
+
+    <script type="text/javascript">
+        function getErrorDetails() {
+            newsid = getUrlParam("details"); //得到参数值
+            if (newsid != null) {
+                document.getElementById("detail_error").innerHTML = '<i class="fa fa-info-circle"></i>&nbsp;&nbsp;' + newsid;
+            } else {
+                document.getElementById("detail_error").innerText = "";
+            }
+        }
+        getErrorDetails();
+    </script>
+</body>
+</html>
