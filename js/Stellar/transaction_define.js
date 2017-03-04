@@ -530,8 +530,12 @@ var ChangeTrustOperationEx = function(mainAddr){
             this.SourceAccount = this.TransSourceAccount;
         }
 
-        if(this.Trustor == this.MainAddress){
-            this.SubType = CHANGE_TRUST_ON;
+        if(body._attributes.body._value._attributes.limit != null) {
+            if(body._attributes.body._value._attributes.limit.high == 0 && body._attributes.body._value._attributes.limit.low == 0) {
+                this.SubType = CHANGE_TRUST_OFF;
+            } else {
+                this.SubType = CHANGE_TRUST_ON;
+            }
         }
     }
 };

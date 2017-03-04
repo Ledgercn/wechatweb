@@ -243,9 +243,9 @@ function formatChangeTrustOperationEx(opera,lang){
         opera.Details += '发起账户:<br>&gt; <a href="accountid.html?addr=' + opera.TransSourceAccount + rParam + '">' + opera.TransSourceAccount + '</a>';
         opera.Details += "<br>" + baseDetails;
         if (opera.SubType == CHANGE_TRUST_ON){
-            opera.Title = "信任-" + opera.AssetCode;
+            opera.Title = "信任(加)-" + opera.AssetCode;
         }else{
-            opera.Title = "变更-" + opera.AssetCode;
+            opera.Title = "信任(减)-" + opera.AssetCode;
         }
         opera.subTitle = SubString(opera.Trustee,8,8);
         opera.addrTitle = SubString(opera.AssetIssuer,5,5);
@@ -256,9 +256,9 @@ function formatChangeTrustOperationEx(opera,lang){
         opera.Details += 'Transaction Account:<br>&gt; <a href="accountid.html?addr=' + opera.TransSourceAccount + rParam + '">' + opera.TransSourceAccount + '</a>';
         opera.Details += "<br>" + baseDetails;
         if (opera.SubType == CHANGE_TRUST_ON){
-            opera.Title = "Trust-" + opera.AssetCode;
+            opera.Title = "Trust(Add)-" + opera.AssetCode;
         }else{
-            opera.Title = "Change-" + opera.AssetCode;
+            opera.Title = "Trust(Del)-" + opera.AssetCode;
         }
         opera.subTitle = SubString(opera.Trustee,8,8);
         opera.addrTitle = SubString(opera.AssetIssuer,5,5);

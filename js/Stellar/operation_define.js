@@ -145,8 +145,8 @@ var MergeOperation = function(mainAddr){
     }
 };
 
-var CHANGE_TRUST_IN = "CHANGE-TRUST-IN"; // 别人信任自己
-var CHANGE_TRUST_ON = "CHANGE-TRUST-ON"; // 自己信任别人
+var CHANGE_TRUST_OFF = "CHANGE-TRUST-OFF"; // 删除信任
+var CHANGE_TRUST_ON = "CHANGE-TRUST-ON"; // 添加信任
 var CHANGE_TRUST_TYPE = "change_trust";
 
 var ChangeTrustOperation = function(mainAddr){
