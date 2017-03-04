@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Asset - Wechat service</title>
+    <link rel="icon" type="image/GIF" href="../Images/logo.jpg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 微信服务">
+    <meta name="keywords" content="账中 钱包 微信 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/bootstrap.min.css"/>-->
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../css/font-awesome.min.css"/>-->
+
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/stellar-sdk/0.6.2/stellar-sdk.min.js"></script>
+    <!--<script src="../js/stellar-sdk.min.js"></script>-->
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/enc-base64-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/cipher-core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/evpkdf-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/x64-core-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/mode-ecb-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/mode-cfb-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/pad-nopadding-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/tripledes-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/aes-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/sha512-min.js"></script>
+    <script src="http://cdn.bootcss.com/crypto-js/3.1.2/components/md5-min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="../js/commom.js"></script>
+    <script src="../js/transcrypto.js"></script>
+    <script src="../js/threadcheck.js"></script>
+    <script src="../js/Stellar/decode_account.js"></script>
+    <script src="../js/getUrlParam.js"></script>
+    <script src="../js/wxqrcode.js"></script>
+    <script src="../js/anchor.js"></script>
+</head>
+<body onunload="saveKeyDatas()">
+    <script>
+        from = getUrlParam('from');
+        if(from == 'singlemessage' || from == 'groupmessage') {
+            parent.location = '../index.html';
+        } else {
+            WxQrcode.QueryServer();
+        }
+    </script>
+    <div class="panel">
+        <div class="container" style="padding-top: 5px">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active" id="id_tabs_itm1">
+                    <a onclick="AnchorController.tabClick(1);">
+                        <label id="id_tabs_itm1_text">添加信任</label> <i class="fa fa-check" id="id_tabs_itm1_icon"></i>
+                    </a>
+                </li>
+                <li role="presentation" id="id_tabs_itm2">
+                    <a onclick="AnchorController.tabClick(2);">
+                        <label id="id_tabs_itm2_text">移除信任</label> <i id="id_tabs_itm2_icon"></i>
+                    </a>
+                </li>
+                <li role="presentation" id="id_tabs_itm3" style="display: none;">
+                    <a onclick="AnchorController.tabClick(3);">
+                        <label id="id_tabs_itm3_text">发行资产</label>  <i id="id_tabs_itm3_icon"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 添加信任页 -->
+        <div class="container" id="id_tab1">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <!-- 网址查找 -->
+                        <dt style="padding-top: 6px">
+                            <i class="fa fa-bookmark"></i>&nbsp;&nbsp;
+                            <label id="id_tab1_url_cap">网址查找</label>
+                        </dt>
+                        <dd>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i id="id_tab1_url_header" onclick="if(this.innerText == 'http://') {this.innerText='https://'} else {this.innerText='http://'}">http://</i>
+                                </span>
+                                    <input id="id_tab1_url_input" type="text" class="form-control"/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="button" onclick="AnchorController.searchUrlBtnClick();"><i id="id_tab1_url_search_btn_icon" class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </dd>
+                        <dd class="text-left">
+                            <i class="fa fa-angle-double-right" style="color: red;"></i> &nbsp;
+                            <i id="id_tab1_url_memo" style="color: #999902;">..</i>
+                        </dd>
+                        <dd class="text-left" id="id_tab1_url_asset_select_dd">
+                        </dd>
+                        <!-- 网址查找 end -->
+
+                        <!-- 网关账户ID -->
+                        <dt style="padding-top: 6px">
+                            <i class="fa fa-anchor"></i>&nbsp;&nbsp;
+                            <label id="id_tab1_anchor_cap">网关账户ID</label>
+                        </dt>
+                        <dd>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="button" onclick="AnchorController.scanQRcode();"><i class="fa fa-camera"></i></button>
+                                </span>
+                                <input id="id_tab1_anchor_id_input" type="text" class="form-control"/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-danger" type="button" onclick="clearInput('id_tab1_anchor_id_input')"><i class="fa fa-close"></i></button>
+                                </span>
+                            </div>
+                        </dd>
+                        <dd class="text-left">
+                            <i class="fa fa-angle-double-right" style="color: red;"></i> &nbsp;
+                            <i id="id_tab1_anchor_id_memo" style="color: #999902;">..</i>
+                        </dd>
+                        <!-- 网关账户ID end -->
+
+                        <!-- 资产名称 -->
+                        <dt style="padding-top: 6px">
+                            <i class="fa fa-gift"></i>&nbsp;&nbsp;
+                            <label id="id_tab1_asset_name_cap">资产名称</label>
+                        </dt>
+                        <dd>
+                            <div class="input-group">
+                                <input id="id_tab1_asset_name_input" type="text" class="form-control"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button" onclick="clearInput('id_tab1_asset_name_input')"><i class="fa fa-close"></i></button>
+                            </span>
+                            </div>
+                        </dd>
+                        <dd class="text-left">
+                            <i class="fa fa-angle-double-right" style="color: red;"></i> &nbsp;
+                            <i id="id_tab1_asset_name_memo" style="color: #999902;">..</i>
+                        </dd>
+                        <!-- 资产名称 end -->
+
+                        <dd>
+                            <pre id="id_execute_msg_context" style="display: none;"></pre>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="panel-footer text-center">
+                    <div class="container">
+                        <div class="row">
+                            <p style="color: red; display: none;" class="fa fa-exclamation-triangle" id="id_confirm_error"></p>
+                        </div>
+                        <div class="row">
+                            <button class="btn btn-primary btn-lg" onclick="AnchorController.addConfirmClick();">
+                                <i class="fa fa-check-circle-o" id="id_confirm_changetrust_btnIcon"></i>
+                                <i id="id_confirm_changetrust_btn">确认添加信任</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 添加信任页 end -->
+
+        <!-- 移除信任页 -->
+        <div class="container" id="id_tab2">
+            <div class="panel panel-primary">
+                <div class="panel-heading text-center">
+                    <label id="id_tab2_heading_cap" style="font-size: large">...</label>
+                    <i id="id_tab2_heading_btn" class="fa fa-refresh fa-2x fa-pull-right" onclick="AnchorController.refreshAccInfoClick();"></i>
+                </div>
+                <div class="panel-body">
+                    <div class="container" id="id_tab2_rmv_list">
+                        <div class="checkbox" style="word-wrap: break-word; word-break: break-all">
+                            <label>
+                                <input type="checkbox"/> ABC - GAKJSNLFKNSFLKNSKFNLKENFKENFKLSKFNLKFNO33SKFNAKJFNJKSFNS
+                            </label>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <pre id="id_tab2_execute_context" style="display: none;"></pre>
+                    </div>
+                </div>
+                <div class="panel-footer text-center" style="font-size: medium; color: red;">
+                    <div class="checkbox">
+                        <label>
+                            <input id="id_confirm_remove_ct_cfm" type="checkbox" onclick="AnchorController.confirmRemoveClick();"/>
+                            <label id="id_confirm_remove_changetrust_confirm_cap">...</label>
+                        </label>
+                    </div>
+                    <button class="btn btn-danger btn-lg" id="id_confirm_remove_changetrust_btn" onclick="AnchorController.removeAnchorConfirmBtnClick();" disabled>
+                        <i class="fa fa-check-circle-o" id="id_confirm_remove_changetrust_btnIcon"></i>
+                        <i id="id_confirm_remove_changetrust_btn_cap">确认移除信任</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 移除信任页 end -->
+
+        <!-- 发行资产页 -->
+        <div class="container" id="id_tab3" style="display: none">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    body3
+                </div>
+                <div class="panel-footer">
+                    footer3
+                </div>
+            </div>
+        </div>
+        <!-- 发行资产页 end -->
+    </div>
+
+    <script>
+        readKeyDatas();
+        AnchorController.initController();
+    </script>
+</body>
+</html>
