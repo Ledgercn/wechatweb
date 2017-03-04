@@ -47,8 +47,9 @@
         from = getUrlParam('from');
         if(from == 'singlemessage' || from == 'groupmessage') {
             parent.location = '../index.html';
+        } else {
+            WxQrcode.QueryServer();
         }
-        WxQrcode.QueryServer();
     </script>
     <div class="panel">
         <!-- error msg -->

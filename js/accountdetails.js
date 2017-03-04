@@ -32,6 +32,7 @@ var AccountDetails = {
             this.uiViews.id_userinfo_lumensbalance_text = "流明币 余额";
             this.uiViews.id_usrifo_tabel_head_coinname_cap = "资产";
             this.uiViews.id_usrifo_tabel_head_balance_cap = "余额";
+            this.uiViews.id_userinfo_anchor_manage = '资产管理';
             this.uiViews.id_userinfo_details_text = "账户详细信息";
             this.uiViews.id_userinfo_details_body_domain_cap = "域名";
             this.uiViews.id_userinfo_details_body_inflation_cap = "通胀";
@@ -44,6 +45,7 @@ var AccountDetails = {
             this.uiViews.id_userinfo_lumensbalance_text = "Lumens Balance";
             this.uiViews.id_usrifo_tabel_head_coinname_cap = "Asset";
             this.uiViews.id_usrifo_tabel_head_balance_cap = "Balance";
+            this.uiViews.id_userinfo_anchor_manage = 'Asset manage';
             this.uiViews.id_userinfo_details_text = "Account information";
             this.uiViews.id_userinfo_details_body_domain_cap = "Domain";
             this.uiViews.id_userinfo_details_body_inflation_cap = "Inflation";
@@ -61,14 +63,15 @@ var AccountDetails = {
         } else {
             $(document).attr("title","Details - LumenStar");
         }
-        this.refreshBtn1 = $('#id_userinfo_refresh_btn1')[0];
-        this.refreshBtn2 = $('#id_userinfo_refresh_btn2')[0];
+        this.refreshBtn1 = $('#id_userinfo_refresh_btn1');
+        this.refreshBtn2 = $('#id_userinfo_refresh_btn2');
         this.accInfoTable = $('#id_usrifo_table_tbody');
 
         $("#id_unique_text")[0].innerText = this.uiViews.id_unique_text;
         $("#id_userinfo_lumensbalance_text")[0].innerText = this.uiViews.id_userinfo_lumensbalance_text;
         $("#id_usrifo_tabel_head_coinname_cap")[0].innerText = this.uiViews.id_usrifo_tabel_head_coinname_cap;
         $("#id_usrifo_tabel_head_balance_cap")[0].innerText = this.uiViews.id_usrifo_tabel_head_balance_cap;
+        $("#id_userinfo_anchor_manage")[0].innerText = this.uiViews.id_userinfo_anchor_manage;
         $("#id_userinfo_details_text")[0].innerText = this.uiViews.id_userinfo_details_text;
         $("#id_userinfo_details_body_pubaddr_cap")[0].innerText = this.uiViews.id_unique_text;
         $("#id_userinfo_details_body_domain_cap")[0].innerText = this.uiViews.id_userinfo_details_body_domain_cap;
@@ -128,8 +131,8 @@ var AccountDetails = {
                 AccountDetails.setError(e);
             },
             complete: function () {
-                AccountDetails.refreshBtn1.setAttribute('class','fa fa-refresh fa-2x');
-                AccountDetails.refreshBtn2.setAttribute('class','fa fa-refresh fa-2x');
+                AccountDetails.refreshBtn1.attr('class','fa fa-refresh fa-2x');
+                AccountDetails.refreshBtn2.attr('class','fa fa-refresh fa-2x');
             }
         });
     },
@@ -180,11 +183,15 @@ var AccountDetails = {
     },
 
     refreshBtnClick : function () {
-        if(this.refreshBtn1.getAttribute('class') == 'fa fa-refresh fa-2x fa-spin'|| this.refreshBtn2.getAttribute('class') == 'fa fa-refresh fa-2x fa-spin'){
+        if(this.refreshBtn1.attr('class') == 'fa fa-refresh fa-2x fa-spin'|| this.refreshBtn2.attr('class') == 'fa fa-refresh fa-2x fa-spin'){
             return;
         }
-        this.refreshBtn1.setAttribute('class','fa fa-refresh fa-2x fa-spin');
-        this.refreshBtn2.setAttribute('class','fa fa-refresh fa-2x fa-spin');
+        this.refreshBtn1.attr('class','fa fa-refresh fa-2x fa-spin');
+        this.refreshBtn2.attr('class','fa fa-refresh fa-2x fa-spin');
         this.getAccountInfo(mAddress);
+    },
+
+    anchorManageClick : function() {
+        parent.location = 'anchor.html?settype=add&' + randomParam();
     }
 };

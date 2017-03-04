@@ -61,9 +61,9 @@
                 <h4 class="list-group-item-heading"><i class="fa fa-credit-card"></i> <i id="id_payment_head"></i></h4>
                 <p class="list-group-item-text"><i class="fa fa-caret-right"></i> <i id="id_payment_memo"></i></p>
             </a>
-            <a href="#" class="list-group-item" style="min-height: 80px;border-width: 2px; display: none;">
-                <h4 class="list-group-item-heading"><i class="fa fa-history"></i> <i id="id_history_head"></i></h4>
-                <p class="list-group-item-text"><i class="fa fa-caret-right"></i> <i id="id_history_memo"></i></p>
+            <a class="list-group-item" style="min-height: 80px;border-width: 2px;" onclick="WalletIndex.anchorClick()">
+                <h4 class="list-group-item-heading"><i class="fa fa-anchor"></i> <i id="id_anchor_head"></i></h4>
+                <p class="list-group-item-text"><i class="fa fa-caret-right"></i> <i id="id_anchor_memo"></i></p>
             </a>
             <a href="#" class="list-group-item" style="min-height: 80px;border-width: 2px; display: none;">
                 <h4 class="list-group-item-heading"><i class="fa fa-search"></i> <i id="id_search_head"></i></h4>
@@ -78,7 +78,6 @@
 
     <script>
         checkDatas();
-//        WalletIndex.initController();
     </script>
 </body>
 </html>

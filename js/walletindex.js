@@ -26,8 +26,8 @@ var WalletIndex = {
             this.uiViews.id_userinfor_memo = "账户基础信息 & Lumens余额 & 资产余额等";
             this.uiViews.id_payment_head = "支付";
             this.uiViews.id_payment_memo = "Lumens & 资产 支付";
-            this.uiViews.id_history_head = "账户历史";
-            this.uiViews.id_history_memo = "账户的操作和支付所有区块链上的历史查询";
+            this.uiViews.id_anchor_head = "资产管理";
+            this.uiViews.id_anchor_memo = "添加、信任或移除网关的资产";
             this.uiViews.id_search_head = "查询";
             this.uiViews.id_search_memo = "用户查询";
             this.uiViews.id_help_head = "帮助";
@@ -39,8 +39,8 @@ var WalletIndex = {
             this.uiViews.id_userinfor_memo = "Account information & Lumens balance & Asset balance ...";
             this.uiViews.id_payment_head = "Payment";
             this.uiViews.id_payment_memo = "Lumens & assets payment";
-            this.uiViews.id_history_head = "Account history";
-            this.uiViews.id_history_memo = "Account operations and payment history queries on block chains";
+            this.uiViews.id_anchor_head = "Anchor Manage";
+            this.uiViews.id_anchor_memo = "Trust anchor or remove asset";
             this.uiViews.id_search_head = "Search";
             this.uiViews.id_search_memo = "Search user";
             this.uiViews.id_help_head = "Help";
@@ -61,8 +61,8 @@ var WalletIndex = {
         $("#id_userinfor_memo")[0].innerText = this.uiViews.id_userinfor_memo;
         $("#id_payment_head")[0].innerText = this.uiViews.id_payment_head;
         $("#id_payment_memo")[0].innerText = this.uiViews.id_payment_memo;
-        $("#id_history_head")[0].innerText = this.uiViews.id_history_head;
-        $("#id_history_memo")[0].innerText = this.uiViews.id_history_memo;
+        $("#id_anchor_head")[0].innerText = this.uiViews.id_anchor_head;
+        $("#id_anchor_memo")[0].innerText = this.uiViews.id_anchor_memo;
         $("#id_search_head")[0].innerText = this.uiViews.id_search_head;
         $("#id_search_memo")[0].innerText = this.uiViews.id_search_memo;
         $("#id_help_head")[0].innerText = this.uiViews.id_help_head;
@@ -104,24 +104,24 @@ var WalletIndex = {
         parent.location = 'payment.html?' + randomParam();
     },
 
-    helpClick : function() {
-        parent.location = '../help/index.html?l=' + mLanguage + '&pt=true&' + randomParam();
+    anchorClick : function() {
+        parent.location = 'anchor.html?' + randomParam();
     },
 
-    PageLeave : function() {
-        saveKeyDatas();
+    helpClick : function() {
+        parent.location = '../help/index.html?l=' + mLanguage + '&pt=true&' + randomParam();
     },
 
     qrcodeClick : function() {
         this.qrvisible = !this.qrvisible;
         if(this.qrvisible){
-            $('#id_qrcode_div')[0].setAttribute('style','display: inherit;');
-            $('#id_userinfo_list_div')[0].setAttribute('style','display: none;');
-            $('#id_qrcode_btn')[0].setAttribute('class','btn fa fa-navicon');
+            $('#id_qrcode_div').css('display','inherit');
+            $('#id_userinfo_list_div').css('display','none');
+            $('#id_qrcode_btn').attr('class','btn fa fa-navicon');
         } else {
-            $('#id_qrcode_div')[0].setAttribute('style','display: none;');
-            $('#id_userinfo_list_div')[0].setAttribute('style','display: inherit;');
-            $('#id_qrcode_btn')[0].setAttribute('class','btn fa fa-qrcode');
+            $('#id_qrcode_div').css('display','none');
+            $('#id_userinfo_list_div').css('display','inherit');
+            $('#id_qrcode_btn').attr('class','btn fa fa-qrcode');
         }
     }
 };
@@ -172,14 +172,14 @@ function successResponse(data, status,xhr) {
         mAddress = TransDecrypt(mTransKey, mAddress, true);
         ParamCheckValid();
 
-        console.log('mLanguage = ' + mLanguage);
-        console.log('mUserID = ' + mUserID);
-        console.log('mUpdateTime = ' + mUpdateTime);
-        console.log('mTransKey = ' + mTransKey);
-        console.log('mUnique = ' + mUnique);
-        console.log('mKey0 = ' + mKey0);
-        console.log('mKey1 = ' + mKey1);
-        console.log('mAddress = ' + mAddress);
+        //console.log('mLanguage = ' + mLanguage);
+        //console.log('mUserID = ' + mUserID);
+        //console.log('mUpdateTime = ' + mUpdateTime);
+        //console.log('mTransKey = ' + mTransKey);
+        //console.log('mUnique = ' + mUnique);
+        //console.log('mKey0 = ' + mKey0);
+        //console.log('mKey1 = ' + mKey1);
+        //console.log('mAddress = ' + mAddress);
     } else if (jsonobj.codeid == UserNotExistFlag) { // 用户不存在
         parent.location = '../index.html';
     } else {
