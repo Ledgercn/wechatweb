@@ -194,12 +194,12 @@ var AnchorController = {
             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
             scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
             success: function (res) {
-                var result = this.splitAnchorAsset(res.resultStr);
+                var result = AnchorController.splitAnchorAsset(res.resultStr);
                 if(result.aid != '' && result.aname != '') {
-                    this.anchorAccId.val(result.aid);
-                    this.assetName.val(result.aname);
+                    AnchorController.anchorAccId.val(result.aid);
+                    AnchorController.assetName.val(result.aname);
                 } else {
-                    this.anchorAccId.val(res.resultStr);
+                    AnchorController.anchorAccId.val(res.resultStr);
                 }
             }
         });
