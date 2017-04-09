@@ -275,3 +275,18 @@ var CreatePassiveOfferOperation = function(mainAddr) {
         this.Type = CREATE_PASSIVE_OFFER_TYPE;
     }
 };
+
+var MANAGE_DATA_TYPE = 'manage_data';
+var MANAGE_DATA_ADD_TYPE = 'manage_data_add';
+var MANAGE_DATA_DELETE_TYPE = 'manage_data_delete';
+
+var ManageDataOperation = function(mainAddr) {
+    BaseOperation.apply(this,arguments);
+    this.DataName = "";
+    this.DataValue = "";
+
+    this.DecodeBody = function(body){
+        this.BaseDecodeBody(body);
+        this.Type = MANAGE_DATA_TYPE;
+    }
+};

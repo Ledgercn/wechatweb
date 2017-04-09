@@ -5,16 +5,19 @@
 var BackgroundServerAddress = 'http://ledgercn.com/weixin';
 var BackgroundTestServerAddress = 'http://192.168.1.101:18999';
 var CurrentServer = BackgroundServerAddress;
+var BackgroundHongbaoTestServerAddress = 'http://192.168.1.105:12468';
+var BackgroundHongbaoServerAddress = 'http://lucky.ledgercn.com';
+var CurrentHongbaoServer = BackgroundHongbaoTestServerAddress;
+var HongbaoRequest = '/request';
 var TestFederationServer = 'http://localhost:1888/federation';
 var ServiceFederationServer = 'http://ledgercn.com:1888/federation';
 var CurrentFederationServer = ServiceFederationServer;
-var StellarLiveNetowrkUrl = 'https://horizon.stellar.org';
-var StellarTestNetowrkUrl = 'https://horizon-testnet.stellar.org';
-var StellarCurrentNetworkUrl = StellarLiveNetowrkUrl;
+var StellarLiveNetworkUrl = 'https://horizon.stellar.org';
+var StellarTestNetworkUrl = 'https://horizon-testnet.stellar.org';
+var StellarCurrentNetworkUrl = StellarLiveNetworkUrl;
 var StellarAccounts = '/accounts';
 var StellarTransactions = '/transactions';
 var StellarLedgers = '/ledgers';
-
 var ReturnCorrectlyFlag = 0;
 var UserNotExistFlag = 5;
 
@@ -30,23 +33,31 @@ var mAddress = "";
 function setStellarNetwork(nw) {
     if(nw == 'LIVE') {
         StellarSdk.Network.usePublicNetwork();
-        StellarCurrentNetworkUrl = StellarLiveNetowrkUrl;
+        StellarCurrentNetworkUrl = StellarLiveNetworkUrl;
     } else {
         StellarSdk.Network.useTestNetwork();
-        StellarCurrentNetworkUrl = StellarTestNetowrkUrl;
+        StellarCurrentNetworkUrl = StellarTestNetworkUrl;
     }
 }
 function clearInput(inputid) {
-    $("#"+inputid)[0].value = "";
+    $("#"+inputid).val('');
 }
 
 function randomParam() {
     return "timer=" + Math.random().toString();
 }
 
-function CheckInputIntFloat(oInput) {
-    if('' != oInput.value.replace(/\d{1,}\.{0,1}\d{0,}/,'')) {
-        oInput.value = oInput.value.match(/\d{1,}\.{0,1}\d{0,}/) == null ? '' :oInput.value.match(/\d{1,}\.{0,1}\d{0,}/);
+function CheckInputPositiveFloat(oInput) {
+    if( ! /^\d+\.?\d{0,8}$/.test(oInput.value)) {
+        var s = oInput.value;
+        oInput.value = s.substring(0,s.length-1);
+    }
+}
+
+function CheckInputPositiveInt(oInput) {
+    if( ! /^\d+$/.test(oInput.value)) {
+        var s = oInput.value;
+        oInput.value = s.substring(0,s.length-1);
     }
 }
 
@@ -73,23 +84,23 @@ function readKeyDatas() {
 }
 
 function ShoworHideBody(iconid, bodyid) {
-    bodyObj = $("#"+bodyid)[0];
-    iconObj = $("#"+iconid)[0];
-    if (bodyObj.style.display == 'none') {
-        iconObj.setAttribute('class','fa fa-caret-down');
-        bodyObj.style.display = 'inherit';
+    bodyObj = $("#"+bodyid);
+    iconObj = $("#"+iconid);
+    if (bodyObj.css('display') == 'none') {
+        iconObj.attr('class','fa fa-caret-down');
+        bodyObj.css('display','inherit');
     } else {
-        iconObj.setAttribute('class','fa fa-caret-right');
-        bodyObj.style.display = 'none';
+        iconObj.attr('class','fa fa-caret-right');
+        bodyObj.css('display','none');
     }
 }
 
 function setDetailVisible(id) {
-    obj = $('#' + id)[0];
-    if(obj.style.display == 'none') {
-        obj.style.display = 'inherit';
+    obj = $('#' + id);
+    if(obj.css('display') == 'none') {
+        obj.css('display','inherit');
     } else {
-        obj.style.display = 'none';
+        obj.css('display','none');
     }
 }
 

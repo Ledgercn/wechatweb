@@ -120,7 +120,7 @@
                             <span class="input-group-btn">
                                 <button class="btn btn-warning" type="button"  onclick="AccountPayment.refreshBtnClick();"><i class="fa fa-refresh" id="id_pay_amount_refresh_btn"></i></button>
                             </span>
-                            <input id="id_pay_amount_input" type="text" class="form-control" onkeyup="CheckInputIntFloat(this);"/>
+                            <input id="id_pay_amount_input" type="text" class="form-control" onkeyup="CheckInputPositiveFloat(this);"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-danger" type="button" onclick="clearInput('id_pay_amount_input')"><i class="fa fa-close"></i></button>
                             </span>

@@ -623,3 +623,39 @@ function formatCreatePassiveOfferOperation(opera,lang){
     opera.DetailRows += 8;
     return opera;
 }
+
+function formatManageDataOperation(opera,lang){
+    opera.DetailRows = 4;
+    rParam = '&l=' + mLanguage + '&' + randomParam();
+    if(lang == 'cn'){
+        opera.Details = '源账户:<br>&gt; <a href="accountid.html?addr=' + opera.SourceAccount + rParam + '">' + opera.SourceAccount + '</a>';
+        opera.Details += '<br>Hash:<br>&gt; <a href="transaction.html?hash=' + opera.Hash + rParam + '">' + opera.Hash + '</a>';
+
+        if (opera.SubType == MANAGE_DATA_ADD_TYPE){
+            opera.Title = "管理信息-添加";
+        }else if (opera.SubType == MANAGE_DATA_DELETE_TYPE) {
+            opera.Title = "管理信息-删除";
+        }else {
+            opera.Title = "管理信息";
+        }
+        opera.Details += "<br>数据名称:<br>&gt; " + opera.DataName;
+        opera.Details += "<br>数据长度:<br>&gt; " + opera.DataValue.length;
+        opera.Details += "<br>数据内容:<br>&gt; " + opera.DataValue;
+    }else{
+        opera.Details = 'Source Account:<br>&gt; <a href="accountid.html?addr=' + opera.SourceAccount + rParam + '">' + opera.SourceAccount + '</a>';
+        opera.Details += '<br>Hash:<br>&gt; <a href="transaction.html?hash=' + opera.Hash + rParam + '">' + opera.Hash + '</a>';
+
+        if (opera.SubType == MANAGE_DATA_ADD_TYPE){
+            opera.Title = "ManageData-Add";
+        }else if (opera.SubType == MANAGE_DATA_DELETE_TYPE) {
+            opera.Title = "ManageData-Del";
+        }else {
+            opera.Title = "ManageData";
+        }
+        opera.Details += "<br>Data name:<br>&gt; " + opera.DataName;
+        opera.Details += "<br>Data length:<br>&gt; " + opera.DataValue.length;
+        opera.Details += "<br>Data value:<br>&gt; " + opera.DataValue;
+    }
+    opera.DetailRows += 8;
+    return opera;
+}

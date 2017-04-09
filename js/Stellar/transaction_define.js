@@ -646,6 +646,48 @@ var CreatePassiveOfferOperationEx = function(mainAddr) {
     }
 };
 
+var ManageDataOperationEx = function(mainAddr) {
+    ManageDataOperation.apply(this,arguments);
+    this.created_datetime = "";
+    this.TransSourceAccount = "";
+    this.fee_paid = "";
+    this.memodef = {
+        memo:"",
+        memo_type:"",
+    };
+    this.source_account_sequence = 0;
+    this.subTitle = "";
+    this.addrTitle = "";
+
+    this.DecodeBody = function(body,trans) {
+        this.created_datetime = trans.created_at;
+        this.fee_paid = trans.fee_paid;
+        this.memodef.memo = trans.memodef.memo;
+        this.memodef.memo_type = trans.memodef.memo_type;
+        this.TransSourceAccount = trans.source_account;
+        this.Hash = trans.hash;
+        this.source_account_sequence = trans.source_account_sequence;
+        this.Type = MANAGE_DATA_TYPE;
+
+        if (body._attributes.sourceAccount != null && body._attributes.sourceAccount != undefined) {
+            if (body._attributes.sourceAccount._arm == "ed25519") {
+                this.SourceAccount = StellarSdk.encodeCheck("accountId", body._attributes.sourceAccount._value);
+            }
+        }
+        this.DataName = body._attributes.body._value._attributes.dataName;
+        this.DataValue = body._attributes.body._value._attributes.dataValue;
+        if(this.DataValue == null || this.DataValue == undefined) {
+            this.SubType = MANAGE_DATA_DELETE_TYPE;
+        } else {
+            this.SubType = MANAGE_DATA_ADD_TYPE;
+        }
+
+        if(this.SourceAccount == ""){
+            this.SourceAccount = this.TransSourceAccount;
+        }
+    }
+};
+
 var BaseTransactionDef = function(main){
     this.id = "";
     this.created_at = "";
@@ -752,10 +794,14 @@ var BaseTransactionDef = function(main){
                         ret[i] = new CreatePassiveOfferOperationEx(this.mainAddr);
                         ret[i].DecodeBody(operater,this);
                         break;
+                    case "manageDatum":
+                        ret[i] = new ManageDataOperationEx(this.mainAddr);
+                        ret[i].DecodeBody(operater,this);
+                        break;
                     default :
-                    console.log(' *** operater = ');
-                    console.log(operater);
-                    console.log('\r\n******************\r\n');
+                        console.log(' *** operater = ');
+                        console.log(operater);
+                        console.log('\r\n******************\r\n');
                 }
 
             }

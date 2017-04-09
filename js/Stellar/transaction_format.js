@@ -387,3 +387,49 @@ function formatCreatePassiveOfferOperationEx(opera,lang){
     }
     return opera;
 }
+
+function formatManageDataOperationEx(opera,lang){
+    formatManageDataOperation.apply(this,arguments);
+    rParam = '&l=' + mLanguage + '&' + randomParam();
+    baseDetails = opera.Details;
+    if(lang == 'cn'){
+        opera.Details = "日期/时间:<br>&gt; " + getLocalDateTimeString(opera.created_datetime,true,lang) + "<br>";
+        opera.Details += '发起账户:<br>&gt; <a href="accountid.html?addr=' + opera.TransSourceAccount + rParam + '">' + opera.TransSourceAccount + '</a>';
+        opera.Details += "<br>" + baseDetails;
+        if (opera.SubType == MANAGE_DATA_ADD_TYPE){
+            opera.Title = "管理信息-添加";
+        }else if (opera.SubType == MANAGE_DATA_DELETE_TYPE) {
+            opera.Title = "管理信息-删除";
+        }else {
+            opera.Title = "管理信息";
+        }
+        if(opera.DataName.length > 16) {
+            opera.subTitle = SubString(opera.DataName,8,8);
+        } else {
+            opera.subTitle =opera.DataName;
+        }
+        opera.addrTitle = '数据长度为' + opera.DataValue.length;
+        opera.Details += "<br>Fee:<br>&gt; " + opera.fee_paid;
+        opera.Details += "<br>Memo( " + opera.memodef.memo_type + " ):<br>&gt; " + opera.memodef.memo;
+    }else{
+        opera.Details = "Date/Time:<br>&gt; " + getLocalDateTimeString(opera.created_datetime,true,lang) + "<br>";
+        opera.Details += 'Transaction Account:<br>&gt; <a href="accountid.html?addr=' + opera.TransSourceAccount + rParam + '">' + opera.TransSourceAccount + '</a>';
+        opera.Details += "<br>" + baseDetails;
+        if (opera.SubType == MANAGE_DATA_ADD_TYPE){
+            opera.Title = "ManageData-Add";
+        }else if (opera.SubType == MANAGE_DATA_DELETE_TYPE) {
+            opera.Title = "ManageData-Del";
+        }else {
+            opera.Title = "ManageData";
+        }
+        if(opera.DataName.length > 16) {
+            opera.subTitle = SubString(opera.DataName,8,8);
+        } else {
+            opera.subTitle =opera.DataName;
+        }
+        opera.addrTitle = 'Data len=' + opera.DataValue.length;
+        opera.Details += "<br>Fee:<br>&gt; " + opera.fee_paid;
+        opera.Details += "<br>Memo( " + opera.memodef.memo_type + " ):<br>&gt; " + opera.memodef.memo;
+    }
+    return opera;
+}

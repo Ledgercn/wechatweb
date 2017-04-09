@@ -265,6 +265,9 @@ var BCAccountId = {
             case CREATE_PASSIVE_OFFER_TYPE:
                 formatCreatePassiveOfferOperationEx(o,mLanguage);
                 break;
+            case MANAGE_DATA_TYPE:
+                formatManageDataOperationEx(o,mLanguage);
+                break;
             default :
                 console.log(o.Type);
         }
