@@ -196,6 +196,7 @@ var BlockChainIndex = {
             context = '<tr><td><a href="transaction.html?hash=' + trans.hash + '&l=' + mLanguage + '&' + rtimer + '">' + SubString(trans.hash,6,6) + '</a></td>';
             context = context + '<td><a href="accountid.html?addr=' + trans.src_account + '&l=' + mLanguage + '&' + rtimer + '">' + SubString(trans.src_account,8,8) + '</a></td></tr>';
             context = context + '<tr><td colspan="2"><p style="word-wrap: break-word; word-break: break-all">';
+            context = context + '<strong>Create time:</strong> ' + trans.create_time + '<br>';
             context = context + '<strong>OperationSize:</strong> ' + trans.operationLength + '<br>';
             context = context + '<strong>Operation[0]->Type:</strong>  ' + trans.firstOperationType + '<br>';
             context = context + '<strong>MemoType:</strong> ' + trans.memo_type + '<br>';
