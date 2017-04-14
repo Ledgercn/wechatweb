@@ -12,6 +12,7 @@ var AccountPayment = {
     assetObj: null,
     amountObj: null,
     errorMsgObj: null,
+    isCustomAsset: false,
 
     initController : function () {
         //this.test();
@@ -25,9 +26,10 @@ var AccountPayment = {
     test : function(){
         mLanguage = 'cn';
         mUnique = 'WALKER';
-        mAddress = 'GBZWSGL57V6J33JNXOE2NSNQWZ2UEBVGESXSCADXAFUED6MT3LNTLK3B';
-        mKey0 = '56a92be4ca340992997eaf7aff4acb30854f1335d2bd6cd50681ca1d9a5659ae98acfe8490debfd2fe9abe0b30b8158261341e573eeef39f4ca068229e4ac0a6';
-        mKey1 = '5935a19c6cbc132eb6f5eb036bca10adce7c96b51c2a363011c204d8e3c48b0b1e193914c7d05341b104cc52f2093034683f122dba92417e';
+        //mAddress = 'GBZWSGL57V6J33JNXOE2NSNQWZ2UEBVGESXSCADXAFUED6MT3LNTLK3B';
+        //mKey0 = '56a92be4ca340992997eaf7aff4acb30854f1335d2bd6cd50681ca1d9a5659ae98acfe8490debfd2fe9abe0b30b8158261341e573eeef39f4ca068229e4ac0a6';
+        //mKey1 = '5935a19c6cbc132eb6f5eb036bca10adce7c96b51c2a363011c204d8e3c48b0b1e193914c7d05341b104cc52f2093034683f122dba92417e';
+        mAddress = 'GC4BKCKTTHQYG4FYE6VBS6WZ2TYFRGHRNYRYT7SEH3ALAIAB7Z6CBIP6';
     },
 
     initStrings : function() {
@@ -46,6 +48,7 @@ var AccountPayment = {
             this.uiViews.id_pay_memo_input_placeholder = "[选填]备注信息";
             this.uiViews.id_pay_memo_memo = "MemoText最多可以输入28个英文字符；MemoID只允许输入数字；MemoHash是一个Hash字符串（16进制显示）；MemoReturn是编码之后的字符串";
             this.uiViews.id_confirmbtn = "发送";
+            this.uiViews.custom_asset_cap = '其他资产';
 
             this.uiViews.err_server_data_invalid = "你的网络连接出现问题或者你所使用的连接已经超时，请从公众号重新发起请求。";
             this.uiViews.err_Account_not_exist = "当前恒星用户账户未被激活！";
@@ -64,6 +67,7 @@ var AccountPayment = {
             this.uiViews.id_pay_memo_input_placeholder = "[Optional] Memo";
             this.uiViews.id_pay_memo_memo = "Memo Text can enter up to 28 English characters; MemoID only allowed to enter numbers; MemoHash is a Hash string (hexadecimal display); MemoReturn string after encoding";
             this.uiViews.id_confirmbtn = "SEND";
+            this.uiViews.custom_asset_cap = 'Other asset';
 
             this.uiViews.err_server_data_invalid = "Your network connection has problems or your connection has timed out, please restart the request from the subscription.";
             this.uiViews.err_Account_not_exist = "The stellar account is not activation!";
@@ -83,9 +87,9 @@ var AccountPayment = {
         $("#id_pay_toaddress_input")[0].setAttribute('placeholder',this.uiViews.id_pay_toaddress_input_placeholder);
         $("#id_pay_toaddress_memo")[0].innerText = this.uiViews.id_pay_toaddress_memo;
 
-        this.assetObj = $('#id_pay_asset_input')[0];
+        this.assetObj = $('#id_pay_asset_input');
         $("#id_pay_asset_cap")[0].innerText = this.uiViews.id_pay_asset_cap;
-        this.assetObj.setAttribute('placeholder',this.uiViews.id_pay_asset_input_placeholder);
+        this.assetObj.attr('placeholder',this.uiViews.id_pay_asset_input_placeholder);
         $("#id_pay_asset_memo")[0].innerText = this.uiViews.id_pay_asset_memo;
 
         this.amountObj = $('#id_pay_amount_input')[0];
@@ -195,7 +199,7 @@ var AccountPayment = {
             complete: function () {
                 AccountPayment.refreshBtn1.setAttribute('class','fa fa-refresh');
                 AccountPayment.refreshBtn2.setAttribute('class','fa fa-refresh');
-                AccountPayment.assetObj.value = '';
+                AccountPayment.assetObj.val('');
                 AccountPayment.amountObj.value = '';
                 AccountPayment.setAssetListContext();
             }
@@ -212,22 +216,24 @@ var AccountPayment = {
     },
 
     setAssetListContext : function() {
-        this.assetListView.innerHTML = '';
-        this.appendAsset('Lumens');
-        if(this.accInfo == null || this.accInfo.Credits.length <= 1) {
+        AccountPayment.assetListView.innerHTML = '';
+        AccountPayment.appendAsset('Lumens');
+        if(AccountPayment.accInfo == null || AccountPayment.accInfo.Credits.length <= 1) {
+            AccountPayment.appendAsset(AccountPayment.uiViews.custom_asset_cap);
             return;
         }
-        for(var idx = 1 ; idx < this.accInfo.Credits.length ; idx++){
-            this.appendAsset(this.accInfo.Credits[idx].asset_code + ':' + this.accInfo.Credits[idx].issuer);
+        for(var idx = 1 ; idx < AccountPayment.accInfo.Credits.length ; idx++){
+            AccountPayment.appendAsset(AccountPayment.accInfo.Credits[idx].asset_code + ':' + AccountPayment.accInfo.Credits[idx].issuer);
         }
+        AccountPayment.appendAsset(AccountPayment.uiViews.custom_asset_cap);
     },
 
     setAmountContext : function() {
-        if(this.assetObj.value == '' || this.assetObj.value == null || this.assetObj.value == undefined) {
+        val = this.assetObj.val();
+        if(val == '' || val == null || val == undefined) {
             this.amountObj.setAttribute('placeholder',this.uiViews.id_pay_amount_input_placeholder);
             return;
         }
-        val = this.assetObj.value;
         palceholdertext = 'Balance:';
         if(mLanguage == 'cn'){
             palceholdertext = '余额:';
@@ -261,7 +267,15 @@ var AccountPayment = {
     },
 
     changeAssetNameClick : function(assetname) {
-        this.assetObj.value = assetname;
+        if(assetname == this.uiViews.custom_asset_cap) {
+            this.assetObj.removeAttr('readonly');
+            this.assetObj.val('');
+            this.isCustomAsset = true;
+        } else {
+            this.assetObj.attr('readonly','readonly');
+            this.assetObj.val(assetname);
+            this.isCustomAsset = false;
+        }
         this.setAmountContext();
     },
 
@@ -408,9 +422,14 @@ var AccountPayment = {
     },
 
     checkAssetandIssuer : function(p) {
-        val = this.assetObj.value;
+        val = this.assetObj.val();
         if(val == '' || val == null || val == undefined || val == 'Lumens') {
             p.assetCode = 'Lumens';
+            return p;
+        }
+        if(this.isCustomAsset == true && val != '' && val !=null && val != undefined) {
+            p.assetCode = val;
+            p.issuer = mAddress;
             return p;
         }
         indexFlag = val.indexOf(':');
@@ -623,11 +642,15 @@ var paymentExecute = {
                 if(data.balances != null && data.sequence != null) {
                     accInfo = AccountInfoDecode(data);
                     paymentExecute.payInfo.sequence = accInfo.Sequence;
-                    if ((accInfo.LumensBalance - paymentExecute.payInfo.amount - 20) > 0){
-                        paymentExecute.appendContext(paymentExecute.getPaymentMessage(1,"ACCOUNT_VALID",[accInfo.LumensBalance]));
+                    if (paymentExecute.payInfo.assetCode == 'Lumens'){
+                        if ((accInfo.LumensBalance - paymentExecute.payInfo.amount - 20) > 0) {
+                            paymentExecute.appendContext(paymentExecute.getPaymentMessage(1,"ACCOUNT_VALID",[accInfo.LumensBalance]));
+                            paymentExecute.Step2();
+                        }else{
+                            paymentExecute.appendContext(paymentExecute.getPaymentMessage(1,"BALANCE_NOT_VALID",[accInfo.LumensBalance]));
+                        }
+                    } else {
                         paymentExecute.Step2();
-                    }else{
-                        paymentExecute.appendContext(paymentExecute.getPaymentMessage(1,"BALANCE_NOT_VALID",[accInfo.LumensBalance]));
                     }
                 } else {
                     paymentExecute.appendContext(AccountPayment.uiViews.err_Account_not_exist);
